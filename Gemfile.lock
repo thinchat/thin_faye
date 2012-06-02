@@ -49,5 +49,6 @@ PLATFORMS
 
 DEPENDENCIES
   capistrano
+  eventmachine
   faye
   thin
