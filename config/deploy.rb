@@ -19,7 +19,9 @@ namespace :deploy do
   %w[start stop restart].each do |command|
     desc "#{command} thin server"
     task command, roles: :app, except: {no_release: true} do
-      run "bundle exec thin #{command} -C config/thin.yml"
+      run  <<-CMD
+        cd #{current_path}; bundle exec thin #{command}
+      CMD
     end
   end
 

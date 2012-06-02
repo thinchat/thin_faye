@@ -52,5 +52,6 @@ DEPENDENCIES
   capistrano
   eventmachine
   faye
+  rack
   railsless-deploy
   thin
