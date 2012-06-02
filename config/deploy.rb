@@ -18,10 +18,8 @@ ssh_options[:forward_agent] = true
 namespace :deploy do
   desc "start thin server"
   task :start, roles: :app, except: {no_release: true} do
-    run <<-CMD
-      cd #{current_path}
-      ruby faye_server.rb &
-    CMD
+    run "cd #{current_path}"
+    run "ruby faye_server.rb &"
   end
 
   desc "Make sure local git is in sync with remote."
