@@ -42,9 +42,9 @@ class FayeMessage
     message_hash = { 'type' => action }
 
     if action == 'subscribe'
-      message_hash['object'] = { 'body' => "#{client.display_name} entered."}
+      message_hash['object'] = {'body' => "#{client.display_name} entered."}
     elsif action == 'disconnect'
-      message_hash['object'] = { 'body' => "#{client.display_name} left." }
+      message_hash['object'] = {'body' => "#{client.display_name} left."}
     end
 
     message_hash
@@ -86,7 +86,11 @@ class ClientEvent
   end
 
   def faye_client
+    faye_prod = Faye::Client.new('http://thinchat.com:9292/faye')
+    faye_prod.publish('/faye_server', {'body' => "This is working."} )
+
     url = ENV["RACK_ENV"] == "production" ? "http://thinchat.com:9292" : "http://localhost:9292"
+
     @faye_client ||= Faye::Client.new("#{url}/faye")
   end
 end
