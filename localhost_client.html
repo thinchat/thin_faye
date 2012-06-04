@@ -7,6 +7,9 @@
       client.subscribe('/messages', function(message) {
         console.log(message.text)
       });
+      client.publish('/messages', {
+        text: 'Client online'
+      });
     </script>
   </head>
   <body>
