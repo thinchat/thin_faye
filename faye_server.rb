@@ -1,7 +1,9 @@
 require 'faye'
+load 'extensions/client_event.rb'
 
 Faye::WebSocket.load_adapter('thin')
 server = Faye::RackAdapter.new(:mount => '/faye', :timeout => 25)
+server.add_extension(ClientEvent.new)
 
 server.bind(:handshake) do |client_id|
   server.get_client.publish('/faye_server', {

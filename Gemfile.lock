@@ -28,6 +28,7 @@ GEM
       yajl-ruby (>= 1.0.0)
     faye-websocket (0.4.5)
       eventmachine (>= 0.12.0)
+    hashie (1.2.0)
     highline (1.6.12)
     http_parser.rb (0.5.3)
     net-scp (1.0.4)
@@ -52,6 +53,7 @@ DEPENDENCIES
   capistrano
   eventmachine
   faye
+  hashie
   rack
   railsless-deploy
   thin
