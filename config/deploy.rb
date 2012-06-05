@@ -15,14 +15,18 @@ set :branch, "master"
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
 
+set :default_environment, {
+  'PATH' => "/home/deployer/.rbenv/shims:/home/deployer/.rbenv/bin:$PATH"
+}
+
 namespace :deploy do
   desc "start thin server"
   task :start, roles: :app, except: {no_release: true} do
-    run "god -c #{current_path}/faye.god"
+    run "cd #{current_path} && bundle exec god -c faye.god"
   end
 
   task :restart, roles: :app, except: {no_release: true} do
-    run "god restart faye"
+    run "cd #{current_path} && bundle exec god restart faye_server"
   end
 
   desc "Make sure local git is in sync with remote."
