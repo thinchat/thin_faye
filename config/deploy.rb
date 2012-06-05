@@ -26,7 +26,7 @@ namespace :deploy do
   end
 
   task :restart, roles: :app, except: {no_release: true} do
-    run "bundle exec god restart faye"
+    run "cd #{current_path} && bundle exec god restart faye"
   end
 
   desc "Make sure local git is in sync with remote."
