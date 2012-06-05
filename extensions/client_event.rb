@@ -6,7 +6,7 @@ class Client
   def initialize(message)
     @display_name = message.display_name
     @room = message.room
-    @client_id = message.client_id
+    @id = message.client_id
   end
 end
 
@@ -81,7 +81,7 @@ class ClientEvent
   end
 
   def connected_clients
-    @connected_clients ||= { }
+    @connected_clients ||= {}
   end
 
   def faye_client
