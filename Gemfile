@@ -1,5 +1,6 @@
 source :rubygems
 
+gem 'god'
 gem 'rack'
 gem 'thin'
 gem 'faye'

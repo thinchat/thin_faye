@@ -22,11 +22,11 @@ set :default_environment, {
 namespace :deploy do
   desc "start thin server"
   task :start, roles: :app, except: {no_release: true} do
-    run "god -c #{current_path}/faye.god"
+    run "cd #{current_path} && bundle exec god -c faye.god"
   end
 
   task :restart, roles: :app, except: {no_release: true} do
-    run "god restart faye"
+    run "bundle exec god restart faye"
   end
 
   desc "Make sure local git is in sync with remote."
