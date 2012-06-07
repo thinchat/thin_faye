@@ -1,13 +1,13 @@
-require './campfire_token.rb'
+require '/home/deployer/apps/thin_faye/campfire_token.rb'
 
 God.watch do |w|
-  w.name = "faye"
+  w.name = "faye_server"
+  w.group = "faye_server"
   w.interval      = 30.seconds
   w.start_grace   = 10.seconds
-  w.group = "faye_server"
   w.env = { 'RAILS_ENV' => "production" }
   w.dir = '/home/deployer/apps/thin_faye/current'
-  w.start = "bundle exec ruby /home/deployer/apps/thin_faye/current/faye_server.rb -E production"
+  w.start = "cd /home/deployer/apps/thin_faye/current && bundle exec ruby faye_server.rb -E production"
   w.keepalive
   w.log = "/var/log/faye/god_faye.log"
   w.err_log = "/var/log/faye/god_faye_error.log"
