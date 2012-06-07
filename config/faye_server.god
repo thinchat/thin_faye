@@ -2,12 +2,12 @@ God.watch do |w|
   w.name = 'faye_server'
   w.interval = 30.seconds
   w.env = { 'RAILS_ENV' => 'production' }
-  w.uid = 'deployuser'
-  w.gid = 'deployuser'
-  w.dir = File.expand_path(File.join(File.dirname(__FILE__),'..'))
+  w.uid = 'deployer'
+  w.gid = 'deployer'
+  w.dir = '/home/deployer/apps/thin_faye/current'
   w.start = "bundle exec ruby faye_server.rb"
   w.start_grace = 10.seconds
-  w.log = File.expand_path(File.join(File.dirname(__FILE__), '..','log','faye_server.log'))
+  w.log = '/var/log/god/faye_server.log'
 
   # restart if memory gets too high
   w.transition(:up, :restart) do |on|
