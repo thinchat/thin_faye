@@ -1,5 +1,4 @@
 require 'hashie'
-# require '../config/initializers'
 
 class Client
   attr_accessor :display_name, :room, :id
@@ -7,7 +6,7 @@ class Client
   def initialize(message)
     @display_name = message.display_name
     @room = message.room
-    @client_id = message.client_id
+    @id = message.client_id
   end
 end
 
@@ -82,13 +81,10 @@ class ClientEvent
   end
 
   def connected_clients
-    @connected_clients ||= { }
+    @connected_clients ||= {}
   end
 
   def faye_client
-    faye_prod = Faye::Client.new('http://thinchat.com:9292/faye')
-    faye_prod.publish('/faye_server', {'body' => "This is working."} )
-
     url = ENV["RACK_ENV"] == "production" ? "http://thinchat.com:9292" : "http://localhost:9292"
 
     @faye_client ||= Faye::Client.new("#{url}/faye")
