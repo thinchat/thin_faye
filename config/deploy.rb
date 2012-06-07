@@ -24,7 +24,9 @@ namespace :deploy do
   task :start, roles: :app, except: {no_release: true} do
     run "cd #{current_path} && bundle exec god -c faye.god"
   end
+  after "deploy", "deploy:start"
 
+  desc "restart thin server"
   task :restart, roles: :app, except: {no_release: true} do
     run "cd #{current_path} && bundle exec god restart faye_server"
   end
