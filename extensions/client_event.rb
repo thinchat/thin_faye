@@ -1,10 +1,10 @@
 require 'hashie'
 
 class Client
-  attr_accessor :display_name, :room, :id
+  attr_accessor :user_name, :room, :id
 
   def initialize(message)
-    @display_name = message.display_name
+    @user_name = message.user_name
     @room = message.room
     @id = message.client_id
   end
@@ -25,8 +25,8 @@ class FayeMessage
     message.channel.split('/').last if message.channel
   end
 
-  def display_name
-    message.ext.display_name if message.ext
+  def user_name
+    message.ext.user_name if message.ext
   end
 
   def room
@@ -38,12 +38,12 @@ class FayeMessage
   end
 
   def build_hash(client=nil)
-    message_hash = { 'type' => action }
+    message_hash = {}
 
     if action == 'subscribe'
-      message_hash['object'] = {'body' => "#{client.display_name} entered."}
+      message_hash['chat_message'] = {'message_body' => "#{client.user_name} entered.", 'type' => action.capitalize }
     elsif action == 'disconnect'
-      message_hash['object'] = {'body' => "#{client.display_name} left."}
+      message_hash['chat_message'] = {'message_body' => "#{client.user_name} left.", 'type' => action.capitalize }
     end
 
     message_hash
@@ -54,6 +54,7 @@ class ClientEvent
   MONITORED_CHANNELS = [ '/meta/subscribe', '/meta/disconnect' ]
 
   def incoming(message, callback)
+    puts message.inspect
     return callback.call(message) unless MONITORED_CHANNELS.include? message['channel']
 
     faye_message = FayeMessage.new(message)
