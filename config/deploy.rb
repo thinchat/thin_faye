@@ -18,7 +18,7 @@ ssh_options[:forward_agent] = true
 namespace :deploy do
   desc "Start faye"
   task :start, roles: :app, except: {no_release: true} do
-    sudo "god --log-level debug start faye_server"
+    sudo "god -D --log-level debug start faye_server"
   end
   after "deploy", "deploy:key"
 
@@ -30,12 +30,12 @@ namespace :deploy do
 
   desc "Restart faye"
   task :restart, roles: :app, except: {no_release: true} do
-    sudo "god --log-level debug restart faye_server"
+    sudo "god -D --log-level debug restart faye_server"
   end
 
   desc "Stop faye"
   task :stop, roles: :app, except: {no_release: true} do
-    sudo "god --log-level debug stop faye_server"
+    sudo "god -D --log-level debug stop faye_server"
   end
 
   desc "Make sure local git is in sync with remote."
