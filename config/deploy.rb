@@ -15,14 +15,14 @@ set :branch, "master"
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
 
-set :default_environment, {
-  'PATH' => "/home/deployer/.rbenv/shims:/home/deployer/.rbenv/bin:$PATH"
-}
+# set :default_environment, {
+#   'PATH' => "/home/deployer/.rbenv/shims:/home/deployer/.rbenv/bin:$PATH"
+# }
 
 namespace :deploy do
   desc "Start faye"
   task :start, roles: :app, except: {no_release: true} do
-    run "#{current_path}/god -c faye.god"
+    sudo "god start faye"
   end
   after "deploy", "deploy:key", "deploy:start"
 
@@ -34,12 +34,12 @@ namespace :deploy do
 
   desc "Restart faye"
   task :restart, roles: :app, except: {no_release: true} do
-    run "#{current_path}/god restart faye_server"
+    sudo "god restart faye"
   end
 
   desc "Stop faye"
   task :stop, roles: :app, except: {no_release: true} do
-    run "#{current_path}/god stop faye_server"
+    sudo "god stop faye"
   end
 
   desc "Make sure local git is in sync with remote."
