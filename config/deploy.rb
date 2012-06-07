@@ -20,15 +20,26 @@ set :default_environment, {
 }
 
 namespace :deploy do
-  desc "start thin server"
+  desc "Start faye"
   task :start, roles: :app, except: {no_release: true} do
-    run "cd #{current_path} && bundle exec god -c faye.god"
+    run "#{current_path}/god -c faye.god"
   end
-  after "deploy", "deploy:start"
+  after "deploy", "deploy:key", "deploy:start"
 
-  desc "restart thin server"
+  desc "Push campfire key"
+  task :key, roles: :app, except: {no_release: true} do
+    ENV['FILES'] = 'campfire_token.rb'
+    upload
+  end
+
+  desc "Restart faye"
   task :restart, roles: :app, except: {no_release: true} do
-    run "cd #{current_path} && bundle exec god restart faye_server"
+    run "#{current_path}/god restart faye_server"
+  end
+
+  desc "Stop faye"
+  task :stop, roles: :app, except: {no_release: true} do
+    run "#{current_path}/god stop faye_server"
   end
 
   desc "Make sure local git is in sync with remote."
