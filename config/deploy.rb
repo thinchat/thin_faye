@@ -15,18 +15,31 @@ set :branch, "master"
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
 
-set :default_environment, {
-  'PATH' => "/home/deployer/.rbenv/shims:/home/deployer/.rbenv/bin:$PATH"
-}
+# set :default_environment, {
+#   'PATH' => "/home/deployer/.rbenv/shims:/home/deployer/.rbenv/bin:$PATH"
+# }
 
 namespace :deploy do
-  desc "start thin server"
+  desc "Start faye"
   task :start, roles: :app, except: {no_release: true} do
-    run "cd #{current_path} && bundle exec god -c faye.god"
+    sudo "god start faye"
+  end
+  after "deploy", "deploy:key", "deploy:start"
+
+  desc "Push campfire key"
+  task :key, roles: :app, except: {no_release: true} do
+    ENV['FILES'] = 'campfire_token.rb'
+    upload
   end
 
+  desc "Restart faye"
   task :restart, roles: :app, except: {no_release: true} do
-    run "cd #{current_path} && bundle exec god restart faye_server"
+    sudo "god restart faye"
+  end
+
+  desc "Stop faye"
+  task :stop, roles: :app, except: {no_release: true} do
+    sudo "god stop faye"
   end
 
   desc "Make sure local git is in sync with remote."
