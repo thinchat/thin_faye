@@ -3,6 +3,8 @@ require '/home/deployer/apps/thin_faye/campfire_token.rb'
 God.watch do |w|
   w.name = "faye_server"
   w.group = "faye_server"
+  w.uid = "deployer"
+  w.gid = "deployer"
   w.interval      = 30.seconds
   w.start_grace   = 10.seconds
   w.env = { 'RAILS_ENV' => "production" }
