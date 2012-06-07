@@ -1,5 +1,6 @@
 God.watch do |w|
   w.name = 'faye_server'
+  w.interval = 30.seconds
   w.env = { 'RAILS_ENV' => 'production' }
   w.uid = 'deployer'
   w.gid = 'deployer'
