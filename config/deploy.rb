@@ -24,7 +24,7 @@ namespace :deploy do
   task :start, roles: :app, except: {no_release: true} do
     sudo "god --log-level debug start faye_server"
   end
-  after "deploy", "deploy:key", "deploy:start"
+  after "deploy", "deploy:key"
 
   desc "Push campfire key"
   task :key, roles: :app, except: {no_release: true} do
