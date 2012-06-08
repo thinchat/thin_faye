@@ -1,64 +1,16 @@
-require 'hashie'
-
-class Client
-  attr_accessor :user_name, :room, :id
-
-  def initialize(message)
-    @user_name = message.user_name
-    @room = message.room
-    @id = message.client_id
-  end
-end
-
-class FayeMessage
-  attr_accessor :message, :client
-
-  def initialize(message)
-    @message = Hashie::Mash.new(message)
-  end
-
-  def client_id
-    message.clientId
-  end
-
-  def action
-    message.channel.split('/').last if message.channel
-  end
-
-  def user_name
-    message.ext.user_name if message.ext
-  end
-
-  def room
-    message.subscription
-  end
-
-  def client
-    @client ||= Client.new(self)
-  end
-
-  def build_hash(client=nil)
-    message_hash = {}
-
-    if action == 'subscribe'
-      message_hash['chat_message'] = {'message_body' => "#{client.user_name} entered.", 'type' => action.capitalize }
-    elsif action == 'disconnect'
-      message_hash['chat_message'] = {'message_body' => "#{client.user_name} left.", 'type' => action.capitalize }
-    end
-
-    message_hash
-  end
-end
+require 'redis'
+load 'config/redis.rb'
+load 'extensions/client.rb'
+load 'extensions/faye_message.rb'
 
 class ClientEvent
   MONITORED_CHANNELS = [ '/meta/subscribe', '/meta/disconnect' ]
 
   def incoming(message, callback)
-    puts message.inspect
     return callback.call(message) unless MONITORED_CHANNELS.include? message['channel']
+    # puts message.inspect
 
     faye_message = FayeMessage.new(message)
-
     if client = get_client(faye_message)
       faye_client.publish(client.room, faye_message.build_hash(client))
     end
@@ -67,27 +19,14 @@ class ClientEvent
 
   def get_client(message)
     if message.action == 'subscribe'
-      push_client(message.client)
+      message.client.push
     elsif message.action == 'disconnect'
-      pop_client(message.client)
+      message.client.pop
     end
-  end
-
-  def push_client(client)
-    connected_clients[client.id] = client
-  end
-
-  def pop_client(client)
-    connected_clients.delete(client.id)
-  end
-
-  def connected_clients
-    @connected_clients ||= {}
   end
 
   def faye_client
     url = ENV["RACK_ENV"] == "production" ? "http://thinchat.com:9292" : "http://localhost:9292"
-
     @faye_client ||= Faye::Client.new("#{url}/faye")
   end
 end
