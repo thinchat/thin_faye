@@ -1,7 +1,8 @@
-PATH
-  remote: ../
+GIT
+  remote: git://github.com/wengzilla/thin_heartbeat.git
+  revision: 6a9c3d15a93636051795788ef308b8fbafd482ab
   specs:
-    thin_heartbeat (0.0.1)
+    thin_heartbeat (0.0.3)
       hashie
       json
       redis
