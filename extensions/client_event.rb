@@ -1,27 +1,29 @@
-require 'redis'
-load 'config/redis.rb'
-load 'extensions/client.rb'
-load 'extensions/faye_message.rb'
+load 'lib/client.rb'
+load 'lib/faye_message.rb'
 
 class ClientEvent
   MONITORED_CHANNELS = [ '/meta/subscribe', '/meta/disconnect' ]
 
   def incoming(message, callback)
+    puts message.inspect
+
     return callback.call(message) unless MONITORED_CHANNELS.include? message['channel']
-    # puts message.inspect
 
     faye_message = FayeMessage.new(message)
     if client = get_client(faye_message)
-      faye_client.publish(client.room, faye_message.build_hash(client))
+      # [ client.room, '/online_users' ].each do |channel|
+        faye_client.publish(client.room, faye_message.build_hash(client))
+      # end
     end
     callback.call(message)
   end
 
   def get_client(message)
     if message.action == 'subscribe'
-      message.client.push
+      ThinHeartbeat::Pulse.add(message.client)
     elsif message.action == 'disconnect'
-      message.client.pop
+      client_hash = ThinHeartbeat::Pulse.delete(message.client)
+      Client.new(client_hash)
     end
   end
 

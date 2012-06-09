@@ -7,6 +7,5 @@ gem 'faye'
 gem 'capistrano'
 gem 'eventmachine'
 gem 'railsless-deploy', :require => nil
-gem 'hashie'
-gem 'redis'
 gem 'activesupport'
+gem 'thin_heartbeat', path: '../'
