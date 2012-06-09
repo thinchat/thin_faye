@@ -8,4 +8,4 @@ gem 'capistrano'
 gem 'eventmachine'
 gem 'railsless-deploy', :require => nil
 gem 'activesupport'
-gem 'thin_heartbeat', path: '../'
+gem 'thin_heartbeat', git: 'git://github.com/wengzilla/thin_heartbeat.git'
