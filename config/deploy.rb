@@ -45,7 +45,7 @@ namespace :deploy do
     require "./config/secret/redis_password.rb"
     sudo "/usr/bin/redis-cli config set requirepass #{REDIS_PASSWORD}"
   end
-  before "deploy:symlink_config", "deploy:secret"
+  after "deploy:key", "deploy:secret"
 
   desc "Make sure local git is in sync with remote."
   task :check_revision, roles: :web do
