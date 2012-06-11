@@ -38,6 +38,15 @@ namespace :deploy do
     sudo "god -D --log-level debug stop faye_server"
   end
 
+  desc "Push secret files"
+  task :secret, roles: :app do
+    run "mkdir #{release_path}/config/secret"
+    transfer(:up, "config/secret/redis_password.rb", "#{release_path}/config/secret/redis_password.rb", :scp => true)
+    require "./config/secret/redis_password.rb"
+    sudo "/usr/bin/redis-cli config set requirepass #{REDIS_PASSWORD}"
+  end
+  before "deploy:symlink_config", "deploy:secret"
+
   desc "Make sure local git is in sync with remote."
   task :check_revision, roles: :web do
     unless `git rev-parse HEAD` == `git rev-parse origin/master`
