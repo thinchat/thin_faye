@@ -7,12 +7,29 @@ class FayeMessage
     @message = Hashie::Mash.new(message)
   end
 
-  def client_id
-    message.clientId
-  end
-
   def action
     message.channel.split('/').last if message.channel
+  end
+
+  def client
+    @client ||= Client.new_from_message(self)
+  end
+
+  def build_hash(client=nil)
+    message_hash = { 'chat_message' => { 'message_type' => action.capitalize,
+                                         'user_name' => "#{client.user_name}",
+                                         'client_id' => "#{client.client_id}",
+                                         'room_id' => "#{client.room_id}" } }
+    if action == 'subscribe'
+      message_hash['chat_message']['message_body'] = "#{client.user_name} entered."
+    elsif action == 'disconnect'
+      message_hash['chat_message']['message_body'] ="#{client.user_name} left."
+    end
+    message_hash
+  end
+
+  def client_id
+    message.clientId
   end
 
   def user_name
@@ -33,20 +50,5 @@ class FayeMessage
 
   def room_id
     message.data.room_id if message.data
-  end
-
-  def client
-    @client ||= Client.new_from_message(self)
-  end
-
-  def build_hash(client=nil)
-    message_hash = {}
-    if action == 'subscribe'
-      message_hash['chat_message'] = {'message_body' => "#{client.user_name} entered.", 'type' => action.capitalize }
-    elsif action == 'disconnect'
-      message_hash['chat_message'] = {'message_body' => "#{client.user_name} left.", 'type' => action.capitalize }
-    end
-
-    message_hash
   end
 end

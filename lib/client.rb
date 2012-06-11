@@ -11,12 +11,12 @@ class Client
     end
   end
 
-  def self.new_from_message(message)
-    Client.new({ "user_id" => message.user_id,
-                 "user_name" => message.user_name,
-                 "user_type" => message.user_type,
-                 "room" => message.room,
-                 "room_id" => message.room_id,
-                 "client_id" => message.client_id })
+  def self.new_from_message(faye_message)
+    Client.new({ "user_id" => faye_message.user_id,
+                 "user_name" => faye_message.user_name,
+                 "user_type" => faye_message.user_type,
+                 "room" => faye_message.room,
+                 "room_id" => faye_message.room_id,
+                 "client_id" => faye_message.client_id })
   end
 end

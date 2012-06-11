@@ -6,23 +6,22 @@ class ClientEvent
 
   def incoming(message, callback)
     puts message.inspect
-
     return callback.call(message) unless MONITORED_CHANNELS.include? message['channel']
 
     faye_message = FayeMessage.new(message)
     if client = get_client(faye_message)
-      # [ client.room, '/online_users' ].each do |channel|
-        faye_client.publish(client.room, faye_message.build_hash(client))
-      # end
+      [ client.room, '/online_users' ].uniq.each do |channel|
+        faye_client.publish(channel, faye_message.build_hash(client))
+      end
     end
     callback.call(message)
   end
 
   def get_client(message)
     if message.action == 'subscribe'
-      ThinHeartbeat::Pulse.add(message.client)
+      PULSE.add(message.client)
     elsif message.action == 'disconnect'
-      client_hash = ThinHeartbeat::Pulse.delete(message.client)
+      client_hash = PULSE.delete(message.client)
       Client.new(client_hash)
     end
   end

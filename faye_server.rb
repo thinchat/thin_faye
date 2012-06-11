@@ -5,12 +5,15 @@ require 'redis'
 load 'extensions/client_event.rb'
 load 'extensions/heartbeat_event.rb'
 load 'extensions/stop_reconnect.rb'
+load 'config/initializers/pulse.rb'
 
 Faye::WebSocket.load_adapter('thin')
 server = Faye::RackAdapter.new(:mount => '/faye', :timeout => 25)
+
+server.add_extension(StopReconnect.new) unless ENV['RAILS_ENV'] == 'production'
+
 server.add_extension(ClientEvent.new)
 server.add_extension(HeartbeatEvent.new)
-# server.add_extension(StopReconnect.new)
 
 server.bind(:handshake) do |client_id|
   server.get_client.publish('/faye_server', {

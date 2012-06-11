@@ -8,7 +8,7 @@ class HeartbeatEvent
 
   def incoming(message, callback)
     return callback.call(message) unless MONITORED_CHANNELS.include? message['channel']
-    ThinHeartbeat::Pulse.extend_life(message)
+    PULSE.extend_life(message)
     callback.call(message)
   end
 end
