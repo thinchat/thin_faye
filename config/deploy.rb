@@ -43,7 +43,7 @@ namespace :deploy do
     run "mkdir #{release_path}/config/secret"
     transfer(:up, "config/secret/redis_password.rb", "#{release_path}/config/secret/redis_password.rb", :scp => true)
     require "./config/secret/redis_password.rb"
-    sudo "/usr/bin/redis-cli config set requirepass #{REDIS_PASSWORD}"
+    sudo "/opt/redis/redis-cli config set requirepass #{REDIS_PASSWORD}"
   end
   after "deploy:key", "deploy:secret"
 
