@@ -1,6 +1,8 @@
 require "bundler/capistrano"
+require 'capistrano/ext/multistage'
 
-server "50.116.34.44", :web, :app, :db, primary: true
+set :stages, %w(production development staging)
+set :default_stage, "development"
 
 set :application, "thin_faye"
 set :user, "deployer"
@@ -21,6 +23,11 @@ namespace :deploy do
     sudo "god -D --log-level debug start faye_server"
   end
   after "deploy", "deploy:key"
+
+  task :create_release_dir, :except => {:no_release => true} do
+    run "mkdir -p #{fetch :releases_path}"
+  end
+  before "deploy:update_code", "deploy:create_release_dir"
 
   desc "Push campfire key"
   task :key, roles: :app, except: {no_release: true} do
@@ -43,7 +50,7 @@ namespace :deploy do
     run "mkdir #{release_path}/config/secret"
     transfer(:up, "config/secret/redis_password.rb", "#{release_path}/config/secret/redis_password.rb", :scp => true)
     require "./config/secret/redis_password.rb"
-    sudo "/opt/redis/redis-cli config set requirepass #{REDIS_PASSWORD}"
+    sudo "/usr/bin/redis-cli config set requirepass #{REDIS_PASSWORD}"
   end
   after "deploy:key", "deploy:secret"
 
