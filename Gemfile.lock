@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/wengzilla/thin_heartbeat.git
-  revision: 041fd30662ad205f113af2acfc5e71aa6bb08858
+  revision: 25af9879ac127b2a8669ec3b0f8bfff4c1a3b88a
   specs:
     thin_heartbeat (0.0.3)
       hashie
