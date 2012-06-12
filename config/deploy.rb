@@ -17,8 +17,6 @@ set :branch, "master"
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
 
-after "deploy", "deploy:restart"
-
 namespace :deploy do
   desc "Start faye"
   task :start, roles: :app, except: {no_release: true} do
