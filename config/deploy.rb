@@ -40,6 +40,17 @@ namespace :deploy do
   end
   before "deploy:update_code", "deploy:create_release_dir"
 
+  desc "Deploy to a server for the first time (assumes you've run 'cap stage-name provision')"
+  task :fresh, roles: :app do
+    puts "Deploying to fresh server..."
+  end
+  after "deploy:fresh", "deploy:setup", "deploy", "deploy:start_god"
+
+  desc "Start the God service on the server"
+  task :start_god, roles: :app do
+    sudo "service god-service start"
+  end
+
   desc "Push secret files"
   task :secret, roles: :app do
     run "mkdir #{release_path}/config/secret"
