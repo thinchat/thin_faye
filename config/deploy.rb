@@ -40,20 +40,15 @@ namespace :deploy do
   end
   before "deploy:update_code", "deploy:create_release_dir"
 
-  desc "Push campfire key"
-  task :key, roles: :app, except: {no_release: true} do
-    transfer(:up, "config/secret/campfire_token.rb", "#{release_path}/config/secret/campfire_token.rb", :scp => true)
-  end
-  after "deploy:update_code", "deploy:key"
-
   desc "Push secret files"
   task :secret, roles: :app do
     run "mkdir #{release_path}/config/secret"
+    transfer(:up, "config/secret/campfire_token.rb", "#{release_path}/config/secret/campfire_token.rb", :scp => true)
     transfer(:up, "config/secret/redis_password.rb", "#{release_path}/config/secret/redis_password.rb", :scp => true)
     require "./config/secret/redis_password.rb"
     sudo "/usr/bin/redis-cli config set requirepass #{REDIS_PASSWORD}"
   end
-  after "deploy:key", "deploy:secret"
+  after "deploy:update_code", "deploy:secret"
 
   desc "Install environment-specific god configuration"
   task :god_config, roles: :app do
