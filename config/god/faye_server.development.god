@@ -1,11 +1,11 @@
-require '../campfire_token.rb'
+require '/home/deployer/apps/thin_faye/current/config/secret/campfire_token.rb'
 
 God.watch do |w|
   w.name = 'faye_server'
   w.interval = 30.seconds
-  w.env = { 'RAILS_ENV' => 'production' }
+  w.env = { 'RAILS_ENV' => 'development' }
   w.uid = 'deployer'
-  w.gid = 'deployer'
+  w.gid = 'admin'
   w.dir = '/home/deployer/apps/thin_faye/current'
   w.start = "bundle exec ruby faye_server.rb"
   w.start_grace = 10.seconds
