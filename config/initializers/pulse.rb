@@ -10,6 +10,7 @@ PASSWORD_REQUIRED = ['production', 'staging']
 
 if PASSWORD_REQUIRED.include? ENV['RAILS_ENV']
   require "./config/secret/redis_password.rb"
-  PULSE = ThinHeartbeat::Pulse.new(host, REDIS_PASSWORD)
+  PULSE = ThinHeartbeat::Pulse.new(REDIS_URL, REDIS_PASSWORD)
 else
-  PULSE = ThinHeartbeat::Pulse.new()
+  PULSE = ThinHeartbeat::Pulse.new(REDIS_URL)
+end

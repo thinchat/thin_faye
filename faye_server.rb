@@ -11,7 +11,6 @@ Faye::WebSocket.load_adapter('thin')
 server = Faye::RackAdapter.new(:mount => '/faye', :timeout => 25)
 
 server.add_extension(StopReconnect.new) unless ENV['RAILS_ENV'] == 'production'
-
 server.add_extension(ClientEvent.new)
 server.add_extension(HeartbeatEvent.new)
 
