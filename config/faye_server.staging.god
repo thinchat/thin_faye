@@ -1,4 +1,4 @@
-require '../campfire_token.rb'
+require 'campfire_token.rb'
 
 God.watch do |w|
   w.name = 'faye_server'
