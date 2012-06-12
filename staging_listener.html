@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <title>Faye</title>
+    <script type="text/javascript" src="http://50.116.40.131:9292/faye/client.js"></script>
+    <script type="text/javascript">
+      var client = new Faye.Client('http://50.116.40.131:9292/faye');
+      client.subscribe('/faye_server', function(message) {
+        console.log(message.text)
+      });
+    </script>
+  </head>
+  <body>
+    Faye Remote Listener
+  </body>
+</html>
