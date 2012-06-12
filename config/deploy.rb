@@ -17,12 +17,13 @@ set :branch, "master"
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
 
+after "deploy", "deploy:restart"
+
 namespace :deploy do
   desc "Start faye"
   task :start, roles: :app, except: {no_release: true} do
     sudo "god -D --log-level debug start faye_server"
   end
-  after "deploy", "deploy:key"
 
   task :create_release_dir, :except => {:no_release => true} do
     run "mkdir -p #{fetch :releases_path}"
@@ -44,6 +45,7 @@ namespace :deploy do
     ENV['FILES'] = 'campfire_token.rb'
     upload
   end
+  after "deploy", "deploy:key"
 
   desc "Push secret files"
   task :secret, roles: :app do
