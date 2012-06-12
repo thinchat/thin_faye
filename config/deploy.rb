@@ -20,23 +20,25 @@ ssh_options[:forward_agent] = true
 namespace :deploy do
   desc "Start faye"
   task :start, roles: :app, except: {no_release: true} do
-    sudo "god -D --log-level debug start faye_server"
+    sudo "service god-service start faye_server"
+  end
+
+  desc "Restart faye"
+  task :restart, roles: :app, except: {no_release: true} do
+    sudo "god -D --log-level debug restart faye_server"
+    sudo "service god-service restart faye_server"
+  end
+
+  desc "Stop faye"
+  task :stop, roles: :app, except: {no_release: true} do
+    sudo "god -D --log-level debug stop faye_server"
+    sudo "service god-service stop faye_server"
   end
 
   task :create_release_dir, :except => {:no_release => true} do
     run "mkdir -p #{fetch :releases_path}"
   end
   before "deploy:update_code", "deploy:create_release_dir"
-
-  desc "Restart faye"
-  task :restart, roles: :app, except: {no_release: true} do
-    sudo "god -D --log-level debug restart faye_server"
-  end
-
-  desc "Stop faye"
-  task :stop, roles: :app, except: {no_release: true} do
-    sudo "god -D --log-level debug stop faye_server"
-  end
 
   desc "Push campfire key"
   task :key, roles: :app, except: {no_release: true} do
