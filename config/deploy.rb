@@ -42,8 +42,7 @@ namespace :deploy do
 
   desc "Push campfire key"
   task :key, roles: :app, except: {no_release: true} do
-    ENV['FILES'] = 'config/campfire_token.rb'
-    upload
+    transfer(:up, "config/secret/campfire_token.rb", "#{release_path}/config/secret/campfire_token.rb", :scp => true)
   end
   after "deploy:update_code", "deploy:key"
 
