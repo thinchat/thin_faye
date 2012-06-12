@@ -25,13 +25,11 @@ namespace :deploy do
 
   desc "Restart faye"
   task :restart, roles: :app, except: {no_release: true} do
-    sudo "god -D --log-level debug restart faye_server"
     sudo "service god-service restart faye_server"
   end
 
   desc "Stop faye"
   task :stop, roles: :app, except: {no_release: true} do
-    sudo "god -D --log-level debug stop faye_server"
     sudo "service god-service stop faye_server"
   end
 
