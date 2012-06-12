@@ -10,7 +10,7 @@ class ClientEvent
 
     faye_message = FayeMessage.new(message)
     if client = get_client(faye_message)
-      [ client.room, '/online_users' ].uniq.each do |channel|
+      [ client.channel, '/online_users' ].uniq.each do |channel|
         faye_client.publish(channel, faye_message.build_hash(client))
       end
     end
