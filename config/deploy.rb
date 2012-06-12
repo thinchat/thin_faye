@@ -29,12 +29,6 @@ namespace :deploy do
   end
   before "deploy:update_code", "deploy:create_release_dir"
 
-  desc "Push campfire key"
-  task :key, roles: :app, except: {no_release: true} do
-    ENV['FILES'] = 'campfire_token.rb'
-    upload
-  end
-
   desc "Restart faye"
   task :restart, roles: :app, except: {no_release: true} do
     sudo "god -D --log-level debug restart faye_server"
@@ -45,6 +39,12 @@ namespace :deploy do
     sudo "god -D --log-level debug stop faye_server"
   end
 
+  desc "Push campfire key"
+  task :key, roles: :app, except: {no_release: true} do
+    ENV['FILES'] = 'campfire_token.rb'
+    upload
+  end
+
   desc "Push secret files"
   task :secret, roles: :app do
     run "mkdir #{release_path}/config/secret"
@@ -53,6 +53,12 @@ namespace :deploy do
     sudo "/usr/bin/redis-cli config set requirepass #{REDIS_PASSWORD}"
   end
   after "deploy:key", "deploy:secret"
+
+  desc "Install environment-specific god configuration"
+  task :god_config, roles: :app do
+    run "mv #{release_path}/config/faye_server.#{rails_env}.god #{release_path}/config/faye_server.god"
+  end
+  after "deploy:secret", "deploy:god_config"
 
   desc "Make sure local git is in sync with remote."
   task :check_revision, roles: :web do
