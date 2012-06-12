@@ -5,7 +5,7 @@ God.watch do |w|
   w.interval = 30.seconds
   w.env = { 'RAILS_ENV' => 'development' }
   w.uid = 'deployer'
-  w.gid = 'deployer'
+  w.gid = 'admin'
   w.dir = '/home/deployer/apps/thin_faye/current'
   w.start = "bundle exec ruby faye_server.rb"
   w.start_grace = 10.seconds
