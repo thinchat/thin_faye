@@ -42,10 +42,10 @@ namespace :deploy do
 
   desc "Push campfire key"
   task :key, roles: :app, except: {no_release: true} do
-    ENV['FILES'] = 'campfire_token.rb'
+    ENV['FILES'] = 'config/campfire_token.rb'
     upload
   end
-  after "deploy", "deploy:key"
+  after "deploy:update_code", "deploy:key"
 
   desc "Push secret files"
   task :secret, roles: :app do
@@ -58,7 +58,7 @@ namespace :deploy do
 
   desc "Install environment-specific god configuration"
   task :god_config, roles: :app do
-    run "mv #{release_path}/config/faye_server.#{rails_env}.god #{release_path}/config/faye_server.god"
+    run "cp #{release_path}/config/faye_server.#{rails_env}.god #{release_path}/config/faye_server.god"
   end
   after "deploy:secret", "deploy:god_config"
 

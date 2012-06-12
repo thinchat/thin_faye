@@ -1,4 +1,4 @@
-require 'campfire_token.rb'
+require '/home/deployer/apps/thin_faye/current/config/campfire_token.rb'
 
 God.watch do |w|
   w.name = 'faye_server'
