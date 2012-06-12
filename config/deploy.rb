@@ -52,7 +52,7 @@ namespace :deploy do
 
   desc "Install environment-specific god configuration"
   task :god_config, roles: :app do
-    run "cp #{release_path}/config/faye_server.#{rails_env}.god #{release_path}/config/faye_server.god"
+    run "cp #{release_path}/config/god/faye_server.#{rails_env}.god #{release_path}/config/faye_server.god"
   end
   after "deploy:secret", "deploy:god_config"
 
