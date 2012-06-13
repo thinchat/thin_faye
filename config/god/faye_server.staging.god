@@ -16,7 +16,7 @@ God.watch do |w|
     on.condition(:memory_usage) do |c|
       c.above = 200.megabytes
       c.times = 2
-      c.notify = 'faye_server'
+      c.notify = 'ha_campfire'
     end
   end
 
@@ -24,7 +24,7 @@ God.watch do |w|
   w.transition(:init, { true => :up, false => :start }) do |on|
     on.condition(:process_running) do |c|
       c.running = true
-      c.notify = 'faye_server'
+      c.notify = 'ha_campfire'
     end
   end
 
@@ -33,7 +33,7 @@ God.watch do |w|
     on.condition(:process_running) do |c|
       c.running = true
       c.interval = 5.seconds
-      c.notify = 'faye_server'
+      c.notify = 'ha_campfire'
     end
 
     # failsafe
@@ -41,7 +41,7 @@ God.watch do |w|
       c.times = 5
       c.transition = :start
       c.interval = 5.seconds
-      c.notify = 'faye_server'
+      c.notify = 'ha_campfire'
     end
   end
 
@@ -49,7 +49,7 @@ God.watch do |w|
   w.transition(:up, :start) do |on|
     on.condition(:process_running) do |c|
       c.running = false
-      c.notify = 'faye_server'
+      c.notify = 'ha_campfire'
     end
   end
 end
@@ -62,5 +62,5 @@ God::Contacts::Campfire.defaults do |d|
 end
 
 God.contact(:campfire) do |c|
-  c.name = 'faye_server'
+  c.name = 'ha_campfire'
 end
