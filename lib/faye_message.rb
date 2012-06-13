@@ -15,12 +15,15 @@ class FayeMessage
     @client ||= Client.new_from_message(self)
   end
 
-  def build_hash(client=nil)
-    message_hash = { 'chat_message' => { 'message_type' => action.capitalize,
-                                         'user_name' => "#{client.user_name}",
-                                         'client_id' => "#{client.client_id}",
-                                         'location'  => "#{client.location}",
-                                         'message_body' => action_message } }
+  def build_hash
+    message_hash = { 'message_type' => action.capitalize,
+                     'user_id'   => "#{client.user_id}", 
+                     'user_type' => "#{client.user_type}",
+                     'user_name' => "#{client.user_name}",
+                     'client_id' => "#{client.client_id}",
+                     'location'  => "#{client.location}",
+                     'channel'   => "#{client.channel}",
+                     'body' => action_message }
   end
 
   def action_message
@@ -34,22 +37,6 @@ class FayeMessage
   def client_id
     message.clientId
   end
-
-  # def user_name
-  #   message.data.user_name if message.data
-  # end
-
-  # def user_id
-  #   message.data.user_id if message.data
-  # end
-
-  # def user_type
-  #   message.data.user_type if message.data
-  # end
-
-  # def location
-  #   message.data.location if message.data
-  # end
 
   [:user_name, :user_id, :user_type, :location].each do |name|
     define_method name do

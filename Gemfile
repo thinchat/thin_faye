@@ -9,3 +9,4 @@ gem 'eventmachine'
 gem 'railsless-deploy', :require => nil
 gem 'activesupport'
 gem 'thin_heartbeat', git: 'git://github.com/wengzilla/thin_heartbeat.git'
+gem 'em-http-request'

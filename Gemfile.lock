@@ -65,6 +65,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   capistrano
+  em-http-request
   eventmachine
   faye
   god
