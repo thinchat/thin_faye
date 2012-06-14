@@ -48,4 +48,31 @@ class FayeMessage
     message.subscription
   end
 
+  def room
+    channel.split('/')[1] if channel
+  end
+
+  def interesting_message?
+    (disconnect? || in_room?)
+  end
+
+  def disconnect?
+    action == "disconnect"
+  end
+
+  def subscribe?
+    action == "subscribe"
+  end
+
+  def in_room?
+    if subscribe?
+      # puts "Message Channel: #{message.channel.inspect}; Room: #{room}; Channel: #{channel}" if channel.nil?
+      # puts "Message Channel: #{message.channel.inspect}; Room: #{room}; Channel: #{channel}"
+      # return true room == 'agents'
+      return true if room && ['messages','online_users'].include?(room)
+    else
+      false
+    end
+  end
+
 end
