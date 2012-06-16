@@ -4,10 +4,8 @@ load 'config/initializers/root_url.rb'
 
 class ClientEvent
   def incoming(message, callback)
-    puts message.inspect
-
     faye_message = FayeMessage.new(message)
-    # puts message.inspect if faye_message.interesting_message?
+    puts message.inspect if faye_message.interesting_message?
     return callback.call(message) unless faye_message.interesting_message?
 
     if add_or_remove_pulse(faye_message)
