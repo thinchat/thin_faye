@@ -71,7 +71,7 @@ class FayeMessage
 
   def subscribed_to_private?
     if subscribe?
-      puts "AGENT? #{['agents'].include?(room)}"
+      # puts "AGENT? #{['agents'].include?(room)}"
       return true if room && ['agents'].include?(room)
     end
   end

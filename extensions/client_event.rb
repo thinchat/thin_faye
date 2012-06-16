@@ -9,9 +9,8 @@ class ClientEvent
     return callback.call(message) unless faye_message.interesting_message?
 
     if add_or_remove_pulse(faye_message)
-      # puts "THIS IS THE MESSAGE ---> #{faye_message.build_hash.to_json}"
+      # puts "THIS IS THE MESSAGE ---> #{faye_message.build_hash.to_json}. URI ---> #{ROOT_URL}/api/v1/messages"
       uri = URI.parse("#{ROOT_URL}/api/v1/messages")
-      puts "THIS IS THE MESSAGE ---> #{faye_message.build_hash.to_json}. URI ---> #{ROOT_URL}/api/v1/messages"
       response = EventMachine::HttpRequest.new(uri).post :body => {:message => faye_message.build_hash.to_json}
     end
     callback.call(message)
@@ -21,7 +20,6 @@ class ClientEvent
     if message.action == 'subscribe'
       PULSE.add(message.client)
     elsif message.action == 'disconnect'
-      puts "DISCONNECT MESSAGE: #{message.inspect}"
       if client_hash = PULSE.delete(message.client)
         message.client = Client.new(client_hash)
       else
