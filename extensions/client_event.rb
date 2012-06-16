@@ -11,12 +11,9 @@ class ClientEvent
     return callback.call(message) unless faye_message.interesting_message?
 
     if add_or_remove_pulse(faye_message)
+      # puts "THIS IS THE MESSAGE ---> #{faye_message.build_hash.to_json}"
       uri = URI.parse("#{ROOT_URL}/api/v1/messages")
       response = EventMachine::HttpRequest.new(uri).post :body => {:message => faye_message.build_hash.to_json}
-      
-      # [ client.channel, '/online_users' ].uniq.each do |channel|
-      #   faye_client.publish(channel, faye_message.build_hash(client))
-      # end
     end
     callback.call(message)
   end

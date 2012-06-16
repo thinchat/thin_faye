@@ -8,6 +8,7 @@ class FayeMessage
   end
 
   def action
+    # WHAT ABOUT IF NOT AN ACTION??
     message.channel.split('/').last if message.channel
   end
 
@@ -53,7 +54,7 @@ class FayeMessage
   end
 
   def interesting_message?
-    (disconnect? || in_room?)
+    (disconnect? || subscribed_to_private? || guest_subscribed_to_room?)
   end
 
   def disconnect?
@@ -64,15 +65,20 @@ class FayeMessage
     action == "subscribe"
   end
 
-  def in_room?
+  def from_guest?
+    client.user_type == "Guest"
+  end
+
+  def subscribed_to_private?
     if subscribe?
-      # puts "Message Channel: #{message.channel.inspect}; Room: #{room}; Channel: #{channel}" if channel.nil?
-      # puts "Message Channel: #{message.channel.inspect}; Room: #{room}; Channel: #{channel}"
-      # return true room == 'agents'
-      return true if room && ['messages','online_users'].include?(room)
-    else
-      false
+      puts "AGENT? #{['agents'].include?(room)}"
+      return true if room && ['agents'].include?(room)
     end
   end
 
+  def guest_subscribed_to_room?
+    if subscribe? && from_guest?
+      return true if room && ['messages'].include?(room)
+    end
+  end
 end
