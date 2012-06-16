@@ -14,6 +14,7 @@ class ClientEvent
       # puts "THIS IS THE MESSAGE ---> #{faye_message.build_hash.to_json}"
       uri = URI.parse("#{ROOT_URL}/api/v1/messages")
       response = EventMachine::HttpRequest.new(uri).post :body => {:message => faye_message.build_hash.to_json}
+      puts response.inspect
     end
     callback.call(message)
   end
