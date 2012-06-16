@@ -20,6 +20,7 @@ class ClientEvent
     if message.action == 'subscribe'
       PULSE.add(message.client)
     elsif message.action == 'disconnect'
+      puts "hb:*:#{message.client.client_id}:*"
       if client_hash = PULSE.delete(message.client)
         message.client = Client.new(client_hash)
       else
