@@ -13,8 +13,8 @@ class ClientEvent
     if add_or_remove_pulse(faye_message)
       # puts "THIS IS THE MESSAGE ---> #{faye_message.build_hash.to_json}"
       uri = URI.parse("#{ROOT_URL}/api/v1/messages")
+      puts "THIS IS THE MESSAGE ---> #{faye_message.build_hash.to_json}. URI ---> #{ROOT_URL}/api/v1/messages"
       response = EventMachine::HttpRequest.new(uri).post :body => {:message => faye_message.build_hash.to_json}
-      puts response.inspect
     end
     callback.call(message)
   end
