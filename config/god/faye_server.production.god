@@ -10,6 +10,7 @@ God.watch do |w|
   w.start = "bundle exec ruby faye_server.rb"
   w.start_grace = 10.seconds
   w.log = '/var/log/god/thin_faye.log'
+  w.err_log = '/var/log/god/thin_faye_error.log'
 
   # restart if memory gets too high
   w.transition(:up, :restart) do |on|
