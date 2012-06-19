@@ -1,7 +1,7 @@
 require '/home/deployer/apps/thin_faye/current/config/secret/campfire_token.rb'
 
 God.watch do |w|
-  w.name = 'faye_server'
+  w.name = 'thin_faye'
   w.interval = 30.seconds
   w.env = { 'RAILS_ENV' => 'staging' }
   w.uid = 'deployer'
@@ -9,7 +9,7 @@ God.watch do |w|
   w.dir = '/home/deployer/apps/thin_faye/current'
   w.start = "bundle exec ruby faye_server.rb"
   w.start_grace = 10.seconds
-  w.log = '/var/log/god/faye_server.log'
+  w.log = '/var/log/god/thin_faye.log'
 
   # restart if memory gets too high
   w.transition(:up, :restart) do |on|
